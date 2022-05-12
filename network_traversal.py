@@ -68,18 +68,18 @@ def dijaska(source: str, costs: dict[tuple[str, str], int]) -> dict[str, int]:
     """
     nodes: set[str] = set(node for edge in costs.keys() for node in edge)  # All nodes
     unvisited: set[str] = set(nodes)  # Unvisited nodes
-    distace: dict[str, int] = {
+    distance: dict[str, int] = {
         node: float("inf") for node in nodes
     }  # Current best lowest distance
-    distace[source] = 0  # Distance to start is zero
+    distance[source] = 0  # Distance to start is zero
     costs = dict(costs)  # Copies the dict
 
     # While there still are nodes that have not been investigated
     while len(unvisited):
         # Finds the unvisited node with the least current distance
-        current = min(unvisited, key=(lambda key: distace[key]))
+        current = min(unvisited, key=(lambda key: distance[key]))
         # The distance to the current node
-        current_dist = distace[current]
+        current_dist = distance[current]
 
         for edge, cost in costs.copy().items():
             # Discard all edges that are not adjecent to the current edge
@@ -89,9 +89,9 @@ def dijaska(source: str, costs: dict[tuple[str, str], int]) -> dict[str, int]:
             next = edge[0] if edge[0] != current else edge[1]
 
             # Updates distance if the new distance is less than the current distance
-            distace[next] = min(distace[next], current_dist + cost)
+            distance[next] = min(distance[next], current_dist + cost)
             # Removes investigated edge
             costs.pop(edge)
         # Removes investigated node
         unvisited.remove(current)
-    return distace
+    return dict(sorted(distance.items(), key=lambda item: item[1]))
